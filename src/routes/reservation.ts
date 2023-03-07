@@ -1,6 +1,6 @@
 import * as express from "express";
 const router = express.Router();
-import { PrismaClient, ReservationType } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { roomsAvailable, wrapAsync } from '../utils/utils';
 import createError from "http-errors";
 const prisma = new PrismaClient();
@@ -99,13 +99,18 @@ router.put('/bill/:id', wrapAsync(async (req: any, res: express.Response, next: 
     res.redirect(`/reservation/${id}`);
 }))
 
-router.get('/:id', wrapAsync(async (req: any, res: express.Response) => {
+router.get('/:id', wrapAsync(async (req: any, res: express.Response, next: any) => {
     const id = req.params.id;
-    const reservation = await prisma.reservation.findUnique({ where: { reservationId: +id }, include: { Bill: { include: { Service: true } }, Guest: true, Room: true } });
-    const totalServiceAmount = reservation.Bill.Service.reduce((total, service) => {
-        return service.price + total;
-    }, 0);
-    res.render('reservation/one', { reservation, totalServiceAmount })
+    try {
+        const reservation = await prisma.reservation.findUnique({ where: { reservationId: +id }, include: { Bill: { include: { Service: true } }, Guest: true, Room: true } });
+        const totalServiceAmount = reservation.Bill.Service.reduce((total, service) => {
+            return service.price + total;
+        }, 0);
+        res.render('reservation/one', { reservation, totalServiceAmount })
+    } catch {
+        next(createError(404, "Not found reservation"));
+    }
+
 }))
 
 router.get("/edit/:id", wrapAsync(async (req: any, res: express.Response) => {

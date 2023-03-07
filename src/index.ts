@@ -5,10 +5,7 @@ import room from "./routes/room";
 import guest from "./routes/guest";
 import bill from "./routes/bill";
 import methodOverride from 'method-override';
-import createError, { HttpError } from 'http-errors';
-import { PrismaClient } from "@prisma/client";
-import { ExpressError } from "./utils/ExpressError";
-const prisma = new PrismaClient();
+import createError from 'http-errors';
 
 const port = 3000;
 const app = express();
@@ -45,14 +42,7 @@ app.use((err: any, req: any, res: any, next: any) => {
         err = { ...err, ...pair }
     }
     res.status(err.status).render('error', { err });
-
 })
-
-async function main() {
-    await prisma.reservation.deleteMany();
-}
-
-//main();
 
 app.listen(port, () => {
     console.log(`server started at http://localhost:${port}`);
