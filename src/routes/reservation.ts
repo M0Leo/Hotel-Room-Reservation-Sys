@@ -100,7 +100,7 @@ router.put('/bill/:id', wrapAsync(async (req: any, res: express.Response, next: 
         res.redirect(`/reservation/${id}`);
     }
     catch {
-        next(createError(404, "Not foudn bill"));
+        next(createError(404, "Not found bill"));
     }
 }))
 
