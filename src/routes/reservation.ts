@@ -78,25 +78,30 @@ router.post("/", wrapAsync(async (req: any, res: express.Response) => {
 router.put('/bill/:id', wrapAsync(async (req: any, res: express.Response, next: any) => {
     const { val } = req.body;
     const id = parseInt(req.params.id);
-    const { Bill: { remaining } } = await prisma.reservation.findUnique({ where: { reservationId: id }, select: { Bill: true } });
+    try {
+        const { Bill: { remaining } } = await prisma.reservation.findUnique({ where: { reservationId: id }, select: { Bill: true } });
 
 
-    if (parseFloat(val) > remaining) {
-        next(createError(400, "Payment amount is greater than remaining amount"));
-    }
+        if (parseFloat(val) > remaining) {
+            next(createError(400, "Payment amount is greater than remaining amount"));
+        }
 
-    await prisma.reservation.update({
-        where: { reservationId: id }, data: {
-            Bill: {
-                update: {
-                    remaining: { decrement: parseFloat(val) },
-                    paid: { increment: parseFloat(val) }
+        await prisma.reservation.update({
+            where: { reservationId: id }, data: {
+                Bill: {
+                    update: {
+                        remaining: { decrement: parseFloat(val) },
+                        paid: { increment: parseFloat(val) }
+                    }
                 }
             }
-        }
-    });
+        });
 
-    res.redirect(`/reservation/${id}`);
+        res.redirect(`/reservation/${id}`);
+    }
+    catch {
+        next(createError(404, "Not foudn bill"));
+    }
 }))
 
 router.get('/:id', wrapAsync(async (req: any, res: express.Response, next: any) => {
