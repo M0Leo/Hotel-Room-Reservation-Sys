@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Guest {
+  guestId     String        @id @default(uuid())
+  name        String
+  phone       String        @unique()
+  address     String?
+  nationality String
+  Reservation Reservation[] @relation("GuestReservation")
+}
+
+model Reservation {
+  reservationId Int             @id @default(autoincrement())
+  checkIn       DateTime
+  checkOut      DateTime
+  Guest         Guest           @relation("GuestReservation", fields: [guestId], references: [guestId], onDelete: Cascade)
+  guestId       String
+  visitors      Int
+  Room          Room            @relation("RoomReservation", fields: [roomId], references: [roomId], onDelete: Cascade)
+  type          ReservationType
+  roomId        Int
+  Bill          Bill?           @relation("BillReservation")
+}
+
+enum ReservationType {
+  Booking
+  Contract
+  Booked
+  Canceled
+}
+
+model Room {
+  roomId      Int           @id @default(autoincrement())
+  type        Type
+  Reservation Reservation[] @relation("RoomReservation")
+}
+
+enum Type {
+  Single
+  Double
+  Triple
+}
+
+model Bill {
+  invoiceNo     String      @id @default(uuid())
+  Reservation   Reservation @relation("BillReservation", fields: [reservationId], references: [reservationId], onDelete: Cascade)
+  reservationId Int         @unique()
+  total         Float       @default(0)
+  remaining     Float       @default(0)
+  paid          Float       @default(0)
+  paymentMode   Payment
+  Service       Service[]
+}
+
+enum Payment {
+  Cash
+  Visa
+}
+
+model Service {
+  serviceId     String      @id @default(uuid())
+  type          ServiceType
+  name          String
+  price         Float
+  quantity      Int
+  Bill          Bill        @relation(fields: [billInvoiceNo], references: [invoiceNo], onDelete: Cascade)
+  billInvoiceNo String
+}
+
+enum ServiceType {
+  Bar
+  Laundry
+}
