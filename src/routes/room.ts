@@ -38,7 +38,7 @@ router.post("/", wrapAsync(async (req: any, res: express.Response, next: any) =>
                 type,
             }
         });
-
+        req.flash('success', `Successfully created new room!`);
         res.redirect("/room");
     }
     next(createError(401, "Room Already exists!"));

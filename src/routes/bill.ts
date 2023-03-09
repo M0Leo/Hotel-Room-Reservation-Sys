@@ -9,14 +9,6 @@ router.get("/", wrapAsync(async (req: any, res: express.Response) => {
     res.render('bills/index', { bills });
 }))
 
-router.get('/:id', wrapAsync(async (req: any, res: any) => {
-    const id = req.body.id;
-    const bill = await prisma.bill.findUnique(id);
-    res.send(bill);
-}))
-
-
-
 router.put('/:id', wrapAsync(async (req: express.Request, res: any) => {
     const data = req.body;
     await prisma.bill.update({

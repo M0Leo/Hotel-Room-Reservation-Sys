@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request } from "express";
 import path from "path";
 import reservation from "./routes/reservation"
 import room from "./routes/room";
@@ -7,6 +7,7 @@ import bill from "./routes/bill";
 import methodOverride from 'method-override';
 import createError from 'http-errors';
 import session, { SessionOptions } from 'express-session';
+import flash from "express-flash";
 
 const port = 3000;
 const app = express();
@@ -30,7 +31,15 @@ const sessionConfig: SessionOptions = {
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+
 app.use(session(sessionConfig));
+app.use(flash());
+
+app.use((req: Request, res: any, next: any) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
 
 app.use("/reservation", reservation);
 app.use("/room", room);
