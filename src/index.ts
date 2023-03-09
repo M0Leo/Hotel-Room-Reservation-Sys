@@ -6,6 +6,7 @@ import guest from "./routes/guest";
 import bill from "./routes/bill";
 import methodOverride from 'method-override';
 import createError from 'http-errors';
+import session, { SessionOptions } from 'express-session';
 
 const port = 3000;
 const app = express();
@@ -19,6 +20,17 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, "public")));
+
+const sessionConfig: SessionOptions = {
+    secret: "ket",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig));
 
 app.use("/reservation", reservation);
 app.use("/room", room);
