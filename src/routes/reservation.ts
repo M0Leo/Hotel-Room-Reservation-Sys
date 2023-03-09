@@ -35,7 +35,7 @@ router.post("/service/:id", wrapAsync(async (req: any, res: any) => {
 }))
 
 
-router.post("/", wrapAsync(async (req: any, res: express.Response) => {
+router.post("/", wrapAsync(async (req: express.Request, res: express.Response) => {
     const { name, address, phone, checkIn, checkOut, type, visitors, room, nationality, total, paymentMode } = req.body;
     const rooms = await roomsAvailable();
     if (rooms.find(r => r.roomId === +room)) {
@@ -67,6 +67,7 @@ router.post("/", wrapAsync(async (req: any, res: express.Response) => {
                 }
             }
         })
+        req.flash('success', 'Successfully made a new reservation!');
         res.redirect("/reservation")
     }
     else {
@@ -96,7 +97,7 @@ router.put('/bill/:id', wrapAsync(async (req: any, res: express.Response, next: 
                 }
             }
         });
-
+        req.flash('success', `Successfully paid ${val}`);
         res.redirect(`/reservation/${id}`);
     }
     catch {
@@ -154,6 +155,7 @@ router.put('/:id', wrapAsync(async (req: express.Request, res: any, next: any) =
             visitors: +visitors,
         }
     })
+    req.flash('success', `Successfully updated!`);
     res.redirect(`/reservation/${id}`);
 }))
 
