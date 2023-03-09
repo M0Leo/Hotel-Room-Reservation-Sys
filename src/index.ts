@@ -41,6 +41,7 @@ app.use((req: Request, res: any, next: any) => {
     next();
 })
 
+//routes
 app.use("/reservation", reservation);
 app.use("/room", room);
 app.use("/guest", guest);
