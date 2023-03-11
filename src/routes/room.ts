@@ -29,19 +29,22 @@ router.post("/", wrapAsync(async (req: any, res: express.Response, next: any) =>
         next(createError(400, msg));
     }
 
-    const { roomId, type } = req.body;
-    const rooms = await prisma.room.findMany();
-    if (!rooms.find(room => room.roomId === +roomId)) {
-        await prisma.room.create({
-            data: {
-                roomId: +roomId,
-                type,
-            }
-        });
-        req.flash('success', `Successfully created new room!`);
-        res.redirect("/room");
+    try {
+        const { roomId, type } = req.body;
+        const rooms = await prisma.room.findMany();
+        if (!rooms.find(room => room.roomId === +roomId)) {
+            await prisma.room.create({
+                data: {
+                    roomId: +roomId,
+                    type,
+                }
+            });
+            req.flash('success', `Successfully created new room!`);
+            res.redirect("/room");
+        }
+    } catch {
+        next(createError(401, "Room Already exists!"));
     }
-    next(createError(401, "Room Already exists!"));
 }))
 
 router.put("/:id", wrapAsync(async (req: any, res: any) => {
