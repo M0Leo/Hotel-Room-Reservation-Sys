@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-export async function roomsAvailable() {
+export async function roomsAvailable(start: string, end: string) {
     const rooms = await prisma.room.findMany({
         select: {
             roomId: true
@@ -10,10 +10,10 @@ export async function roomsAvailable() {
                 none: {
                     AND: {
                         checkIn: {
-                            lte: new Date().toISOString()
+                            lte: new Date(start).toISOString()
                         },
                         checkOut: {
-                            gte: new Date().toISOString()
+                            gte: new Date(end).toISOString()
                         }
                     }
                 },

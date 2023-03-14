@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 router.get("/", wrapAsync(async (req: any, res: any) => {
     const rooms = await prisma.room.findMany();
-    const availables = await roomsAvailable();
+    const availables = await roomsAvailable(new Date().toISOString(), new Date().toISOString());
     res.render("rooms/index", { rooms, availables })
 }))
 
