@@ -11,7 +11,7 @@ router.get("/", wrapAsync(async (req: any, res: express.Response) => {
 }))
 
 router.get("/new", wrapAsync(async (req: any, res: any) => {
-    const rooms = await roomsAvailable();
+    const rooms = await roomsAvailable(new Date().toISOString(), new Date().toISOString());
     res.render('reservation/new', { rooms });
 }))
 
@@ -37,7 +37,7 @@ router.post("/service/:id", wrapAsync(async (req: any, res: any) => {
 
 router.post("/", wrapAsync(async (req: express.Request, res: express.Response) => {
     const { name, address, phone, checkIn, checkOut, type, visitors, room, nationality, total, paymentMode } = req.body;
-    const rooms = await roomsAvailable();
+    const rooms = await roomsAvailable(checkIn, checkOut);
     if (rooms.find(r => r.roomId === +room)) {
         await prisma.reservation.create({
             data: {
@@ -122,7 +122,7 @@ router.get('/:id', wrapAsync(async (req: any, res: express.Response, next: any) 
 router.get("/edit/:id", wrapAsync(async (req: any, res: express.Response) => {
     const id = req.params.id;
     const reservation = await prisma.reservation.findUnique({ where: { reservationId: +id }, include: { Bill: true, Guest: true, Room: true } });
-    const rooms = await roomsAvailable();
+    const rooms = await roomsAvailable(new Date().toISOString(), new Date().toISOString());
     res.render("reservation/edit", { reservation, rooms })
 }))
 
