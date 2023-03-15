@@ -10,6 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       Int    @id @default(autoincrement())
+  username String
+  role     Role   @default(USER)
+  password String
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
 model Guest {
   guestId     String        @id @default(uuid())
   name        String
