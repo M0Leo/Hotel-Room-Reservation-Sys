@@ -4,10 +4,15 @@ import reservation from "./routes/reservation"
 import room from "./routes/room";
 import guest from "./routes/guest";
 import bill from "./routes/bill";
+import user from "./routes/user";
 import methodOverride from 'method-override';
 import createError from 'http-errors';
 import session, { SessionOptions } from 'express-session';
 import flash from "express-flash";
+import bcrypt from "bcryptjs";
+import { PrismaClient, Role } from '@prisma/client';
+import { auth, isAdmin } from "./middlewares/auth";
+const prisma = new PrismaClient();
 
 const port = 3000;
 const app = express();
@@ -33,6 +38,19 @@ const sessionConfig: SessionOptions = {
     }
 }
 
+type User = {
+    id: number;
+    username: string;
+    role: string;
+};
+
+// Augment express-session with a custom SessionData object
+declare module "express-session" {
+    interface SessionData {
+        user: User;
+    }
+}
+
 app.use(session(sessionConfig));
 app.use(flash());
 
@@ -47,6 +65,7 @@ app.use("/reservation", reservation);
 app.use("/room", room);
 app.use("/guest", guest);
 app.use("/bill", bill);
+app.use("/user", user);
 
 app.get("/", (req: any, res: any) => {
     res.render('index');

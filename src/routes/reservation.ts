@@ -3,14 +3,15 @@ const router = express.Router();
 import { PrismaClient } from '@prisma/client';
 import { roomsAvailable, wrapAsync } from '../utils/utils';
 import createError from "http-errors";
+import { auth } from "../middlewares/auth";
 const prisma = new PrismaClient();
 
-router.get("/", wrapAsync(async (req: any, res: express.Response) => {
+router.get("/", auth, wrapAsync(async (req: any, res: express.Response) => {
     const reservations = await prisma.reservation.findMany({ include: { Room: true, Guest: true, Bill: { include: { Service: true } } } });
     res.render("reservation/index", { reservations })
 }))
 
-router.get("/new", wrapAsync(async (req: any, res: any) => {
+router.get("/new", auth, wrapAsync(async (req: any, res: any) => {
     const rooms = await roomsAvailable(new Date().toISOString(), new Date().toISOString());
     res.render('reservation/new', { rooms });
 }))
@@ -105,7 +106,7 @@ router.put('/bill/:id', wrapAsync(async (req: any, res: express.Response, next: 
     }
 }))
 
-router.get('/:id', wrapAsync(async (req: any, res: express.Response, next: any) => {
+router.get('/:id', auth, wrapAsync(async (req: any, res: express.Response, next: any) => {
     const id = req.params.id;
     try {
         const reservation = await prisma.reservation.findUnique({ where: { reservationId: +id }, include: { Bill: { include: { Service: true } }, Guest: true, Room: true } });
@@ -119,7 +120,7 @@ router.get('/:id', wrapAsync(async (req: any, res: express.Response, next: any) 
 
 }))
 
-router.get("/edit/:id", wrapAsync(async (req: any, res: express.Response) => {
+router.get("/edit/:id", auth, wrapAsync(async (req: any, res: express.Response) => {
     const id = req.params.id;
     const reservation = await prisma.reservation.findUnique({ where: { reservationId: +id }, include: { Bill: true, Guest: true, Room: true } });
     const rooms = await roomsAvailable(new Date().toISOString(), new Date().toISOString());

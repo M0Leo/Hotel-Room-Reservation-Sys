@@ -2,9 +2,10 @@ import * as express from "express";
 const router = express.Router();
 import { PrismaClient } from '@prisma/client';
 import { wrapAsync } from '../utils/utils';
+import { auth } from "../middlewares/auth";
 const prisma = new PrismaClient();
 
-router.get("/", wrapAsync(async (req: any, res: express.Response) => {
+router.get("/", auth, wrapAsync(async (req: any, res: express.Response) => {
     const bills = await prisma.bill.findMany({ include: { Reservation: { include: { Guest: true } }, } });
     res.render('bills/index', { bills });
 }))

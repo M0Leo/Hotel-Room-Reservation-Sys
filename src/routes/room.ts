@@ -4,16 +4,17 @@ import { PrismaClient } from '@prisma/client';
 import { roomsAvailable, wrapAsync } from '../utils/utils'
 import createError from "http-errors";
 import Joi from "joi";
+import { auth } from "../middlewares/auth";
 const prisma = new PrismaClient();
 
 
-router.get("/", wrapAsync(async (req: any, res: any) => {
+router.get("/", auth, wrapAsync(async (req: any, res: any) => {
     const rooms = await prisma.room.findMany();
     const availables = await roomsAvailable(new Date().toISOString(), new Date().toISOString());
     res.render("rooms/index", { rooms, availables })
 }))
 
-router.get("/new", wrapAsync(async (req: any, res: any) => {
+router.get("/new", auth, wrapAsync(async (req: any, res: any) => {
     res.render("rooms/new")
 }))
 
