@@ -67,7 +67,7 @@ app.use("/guest", guest);
 app.use("/bill", bill);
 app.use("/user", user);
 
-app.get("/", (req: any, res: any) => {
+app.get("/", auth, (req: any, res: any) => {
     res.render('index');
 })
 

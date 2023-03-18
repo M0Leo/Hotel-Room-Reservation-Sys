@@ -6,6 +6,7 @@ export const auth = async (req: Request, res: Response, next: any) => {
         return res.redirect("user/login")
     }
 
+    res.locals.user = req.session.user;
     next();
 }
 
