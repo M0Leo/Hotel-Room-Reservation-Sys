@@ -3,35 +3,13 @@ const router = express.Router();
 import { PrismaClient } from '@prisma/client';
 import { wrapAsync } from '../utils/utils'
 import { auth } from "../middlewares/auth";
+import { Guest } from "../controllers/guest.controller";
 const prisma = new PrismaClient();
 
-router.get("/", auth, wrapAsync(async (req: any, res: any) => {
-    const guests = await prisma.guest.findMany();
-    res.render("guest/index", { guests })
-}))
+router.get("/", auth, wrapAsync(Guest.findAll))
 
-router.put("/:id", wrapAsync(async (req: any, res: any) => {
-    const data = req.body;
-    const id = req.params.id;
-
-    await prisma.guest.update({
-        data: {
-            ...data
-        },
-        where: { guestId: id }
-    })
-
-    res.redirect("guest/index")
-}))
-
-router.delete("/:id", wrapAsync(async (req: any, res: any) => {
-    const id = req.params.id;
-
-    await prisma.guest.delete({
-        where: { guestId: id }
-    })
-    res.redirect("guest/index")
-}))
-
+router.route('/:id')
+    .put(wrapAsync(Guest.updateOne))
+    .delete(wrapAsync(Guest.deleteOne))
 
 export default router;

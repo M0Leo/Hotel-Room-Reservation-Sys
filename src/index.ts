@@ -60,6 +60,12 @@ app.use((req: Request, res: any, next: any) => {
     next();
 })
 
+app.use((req, res, next) => {
+    res.locals.user = req.session.user;
+    next();
+});
+
+
 //routes
 app.use("/reservation", reservation);
 app.use("/room", room);
@@ -67,7 +73,7 @@ app.use("/guest", guest);
 app.use("/bill", bill);
 app.use("/user", user);
 
-app.get("/", auth, (req: any, res: any) => {
+app.get("/", (req: any, res: any) => {
     res.render('index');
 })
 

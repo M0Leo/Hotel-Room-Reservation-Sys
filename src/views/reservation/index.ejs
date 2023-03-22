@@ -10,7 +10,9 @@
                         <th scope="col">Visitors</th>
                         <th scope="col">Type</th>
                         <th scope="col">Room</th>
-                        <th scope="col">Edit</th>
+                        <% if (user.role=='ADMIN' ) { %>
+                            <th scope="col">Edit</th>
+                            <% } %>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,10 +38,13 @@
                             <td>
                                 <%= reservation.Room.roomId %>
                             </td>
-                            <td>
-                                <a href="/reservation/edit/<%= reservation.reservationId %>"><i
-                                        class="bi bi-pencil-square"></i></a>
-                            </td>
+
+                            <% if (user.role=='ADMIN' ) { %>
+                                <td>
+                                    <a href="/reservation/edit/<%= reservation.reservationId %>"><i
+                                            class="bi bi-pencil-square"></i></a>
+                                </td>
+                                <% } %>
                         </tr>
                         <% } %>
                 </tbody>

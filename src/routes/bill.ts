@@ -3,19 +3,11 @@ const router = express.Router();
 import { PrismaClient } from '@prisma/client';
 import { wrapAsync } from '../utils/utils';
 import { auth } from "../middlewares/auth";
+import { Bill } from "../controllers/bill.controller";
 const prisma = new PrismaClient();
 
-router.get("/", auth, wrapAsync(async (req: any, res: express.Response) => {
-    const bills = await prisma.bill.findMany({ include: { Reservation: { include: { Guest: true } }, } });
-    res.render('bills/index', { bills });
-}))
+router.get("/", auth, wrapAsync(Bill.findAll))
 
-router.put('/:id', wrapAsync(async (req: express.Request, res: any) => {
-    const data = req.body;
-    await prisma.bill.update({
-        where: { invoiceNo: req.body.id },
-        data: { ...data }
-    })
-}))
+router.put('/:id', wrapAsync(Bill.updateOne))
 
 export default router;

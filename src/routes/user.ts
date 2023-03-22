@@ -47,8 +47,8 @@ router.post('/login', wrapAsync(async (req: express.Request, res: express.Respon
     })
 }))
 
-router.post('/logout', wrapAsync(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    req.session.user = null;
+router.get('/logout', wrapAsync(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    req.session.user = undefined;
     res.redirect('/');
 }))
 
