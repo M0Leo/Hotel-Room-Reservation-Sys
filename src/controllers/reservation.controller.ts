@@ -1,10 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import * as express from "express";
-const router = express.Router();
 import { PrismaClient } from '@prisma/client';
-import { roomsAvailable, wrapAsync } from '../utils/utils';
+import { roomsAvailable } from '../utils/utils';
 import createError from "http-errors";
-import { auth } from "../middlewares/auth";
 const prisma = new PrismaClient();
 
 export class Reservation {
