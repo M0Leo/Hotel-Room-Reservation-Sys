@@ -4,20 +4,15 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "clean": "rimraf dist/*",
-    "copy-assets": "ts-node tools/copyAssets.ts",
-    "lint": "",
-    "tsc": "tsc",
-    "build": "npm-run-all clean lint tsc copy-assets",
-    "dev:start": "npm-run-all build start",
-    "dev": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
-    "start": "node ."
+    "build": "tsc -w",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^4.10.1",
+    "@prisma/client": "^4.16.2",
     "@types/express-flash": "^0.0.2",
     "@types/express-session": "^1.17.6",
     "bcryptjs": "^2.4.3",
@@ -34,11 +29,11 @@
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^9.3.0",
-    "@types/bcryptjs": "^2.4.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.17",
     "@types/http-errors": "^2.0.1",
     "@types/method-override": "^0.0.32",
-    "@types/node": "^18.13.0",
+    "@types/node": "^18.19.3",
     "@types/shelljs": "^0.8.11",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",

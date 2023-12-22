@@ -6,18 +6,13 @@ import guest from "./routes/guest";
 import bill from "./routes/bill";
 import user from "./routes/user";
 import methodOverride from 'method-override';
-import createError from 'http-errors';
 import session, { SessionOptions } from 'express-session';
 import flash from "express-flash";
-import bcrypt from "bcryptjs";
-import { PrismaClient, Role } from '@prisma/client';
-import { auth, isAdmin } from "./middlewares/auth";
-const prisma = new PrismaClient();
-
-const port = 3000;
+import { config } from "./config";
+import { error404 } from "./middlewares/404";
 const app = express();
 const engine = require('ejs-mate');
-
+const port = process.env.PORT || 3000;
 
 app.engine('ejs', engine);
 app.use(express.json());
@@ -29,12 +24,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //session options
 const sessionConfig: SessionOptions = {
-    secret: "ket",
+    secret: config.sessionSecret,
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        maxAge: parseInt(config.sessionCookieMaxAge),
     }
 }
 
@@ -77,10 +72,7 @@ app.get("/", (req: any, res: any) => {
     res.render('index');
 })
 
-
-app.all("*", (req, res, next) => {
-    next(createError(404, 'Not Found'))
-})
+app.all("*", error404)
 
 app.use((err: any, req: any, res: any, next: any) => {
     const { status = 500 } = err;
