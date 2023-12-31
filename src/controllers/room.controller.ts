@@ -1,10 +1,8 @@
 import * as express from "express";
 const router = express.Router();
 import { PrismaClient } from '@prisma/client';
-import { roomsAvailable, wrapAsync } from '../utils/utils'
 import createError from "http-errors";
 import Joi from "joi";
-import { auth } from "../middlewares/auth";
 const prisma = new PrismaClient();
 
 export class Room {
@@ -67,4 +65,30 @@ export class Room {
             where: { roomId: id }
         })
     }
+}
+
+export async function roomsAvailable(start: string, end: string) {
+    const rooms = await prisma.room.findMany({
+        select: {
+            roomId: true
+        }, where: {
+            Reservation: {
+                none: {
+                    AND: {
+                        checkIn: {
+                            lte: new Date(start).toISOString()
+                        },
+                        checkOut: {
+                            gte: new Date(end).toISOString()
+                        }
+                    }
+                },
+                every: {
+                    type: { not: "Canceled" }
+                }
+            }
+        }
+    }
+    )
+    return rooms;
 }

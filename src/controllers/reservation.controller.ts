@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from '@prisma/client';
-import { roomsAvailable } from '../utils/utils';
 import createError from "http-errors";
+import { roomsAvailable } from "./room.controller";
 const prisma = new PrismaClient();
 
 export class Reservation {
@@ -44,7 +44,7 @@ export class Reservation {
                 }
             })
             req.flash('success', 'Successfully made a new reservation!');
-            res.redirect("/reservation")
+            return res.redirect("/reservation")
         }
         else {
             res.send("Room already reserved!");
@@ -58,9 +58,9 @@ export class Reservation {
             const totalServiceAmount = reservation.Bill.Service.reduce((total, service) => {
                 return service.price + total;
             }, 0);
-            res.render('reservation/one', { reservation, totalServiceAmount })
+            return res.render('reservation/one', { reservation, totalServiceAmount })
         } catch {
-            next(createError(404, "Not found reservation"));
+            next(createError(404, `Not found reservation ${id}`));
         }
     }
 

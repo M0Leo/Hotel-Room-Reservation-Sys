@@ -4,8 +4,7 @@ import bcrypt from "bcryptjs";
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const router = express.Router();
-import createError from 'http-errors';
-import { isAdmin, auth } from "../middlewares/auth";
+import { isAdmin } from "../middlewares/auth";
 
 router.post('/register', isAdmin, wrapAsync(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     let { username, password, role } = req.body;

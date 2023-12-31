@@ -10,6 +10,7 @@ import session, { SessionOptions } from 'express-session';
 import flash from "express-flash";
 import { config } from "./config";
 import error404 from "./middlewares/error404";
+import initAdmin from "./utils/initAdmin";
 const app = express();
 const engine = require('ejs-mate');
 const port = process.env.PORT || 3000;
@@ -83,6 +84,8 @@ app.use((err: any, req: any, res: any, next: any) => {
     }
     res.status(err.status).render('error', { err });
 })
+
+initAdmin();
 
 app.listen(port, () => {
     console.log(`server started at http://localhost:${port}`);
