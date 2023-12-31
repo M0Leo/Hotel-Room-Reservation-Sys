@@ -9,7 +9,7 @@ import methodOverride from 'method-override';
 import session, { SessionOptions } from 'express-session';
 import flash from "express-flash";
 import { config } from "./config";
-import { error404 } from "./middlewares/404";
+import error404 from "./middlewares/error404";
 const app = express();
 const engine = require('ejs-mate');
 const port = process.env.PORT || 3000;
@@ -33,19 +33,6 @@ const sessionConfig: SessionOptions = {
     }
 }
 
-type User = {
-    id: number;
-    username: string;
-    role: string;
-};
-
-// Augment express-session with a custom SessionData object
-declare module "express-session" {
-    interface SessionData {
-        user: User;
-    }
-}
-
 app.use(session(sessionConfig));
 app.use(flash());
 
@@ -54,6 +41,19 @@ app.use((req: Request, res: any, next: any) => {
     res.locals.error = req.flash('error');
     next();
 })
+
+type User = {
+    id: number;
+    username: string;
+    role: string;
+};
+
+declare module "express-session" {
+  export interface SessionData {
+    user: User;
+  }
+}
+
 
 app.use((req, res, next) => {
     res.locals.user = req.session.user;
@@ -72,7 +72,7 @@ app.get("/", (req: any, res: any) => {
     res.render('index');
 })
 
-app.all("*", error404)
+error404(app);
 
 app.use((err: any, req: any, res: any, next: any) => {
     const { status = 500 } = err;

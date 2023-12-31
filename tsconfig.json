@@ -16,9 +16,9 @@
         }
     },
     "include": [
-        "src/**/*"
+        "src/**/*.ts"
     ],
     "exclude": [
         "src/public"
-    ]
+    ],
 }

@@ -31,7 +31,7 @@ router.post('/login', wrapAsync(async (req: express.Request, res: express.Respon
 
     if (!user) {
         req.flash('error', 'Incorrect username');
-        res.redirect('back')
+        return res.redirect('back')
     }
 
     bcrypt.compare(password, user.password, function (err: any, success: any) {
