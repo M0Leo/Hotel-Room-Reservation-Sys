@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -w",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -35,7 +35,7 @@
     "@types/method-override": "^0.0.32",
     "@types/node": "^18.19.3",
     "@types/shelljs": "^0.8.11",
-    "nodemon": "^2.0.20",
+    "nodemon": "^2.0.22",
     "npm-run-all": "^4.1.5",
     "prisma": "^4.10.1",
     "prisma-erd-generator": "^1.2.5",

@@ -8,6 +8,6 @@ const prisma = new PrismaClient();
 
 router.get("/", auth, wrapAsync(Bill.findAll))
 
-router.put('/:id', wrapAsync(Bill.updateOne))
+router.put('/:id', auth, wrapAsync(Bill.updateOne))
 
 export default router;

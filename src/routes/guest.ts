@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 router.get("/", auth, wrapAsync(Guest.findAll))
 
 router.route('/:id')
-    .put(wrapAsync(Guest.updateOne))
-    .delete(wrapAsync(Guest.deleteOne))
+    .put(auth, wrapAsync(Guest.updateOne))
+    .delete(auth, wrapAsync(Guest.deleteOne))
 
 export default router;

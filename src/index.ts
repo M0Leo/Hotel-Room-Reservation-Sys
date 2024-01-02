@@ -13,7 +13,6 @@ import error404 from "./middlewares/error404";
 import initAdmin from "./utils/initAdmin";
 const app = express();
 const engine = require('ejs-mate');
-const port = process.env.PORT || 3000;
 
 app.engine('ejs', engine);
 app.use(express.json());
@@ -87,6 +86,6 @@ app.use((err: any, req: any, res: any, next: any) => {
 
 initAdmin();
 
-app.listen(port, () => {
-    console.log(`server started at http://localhost:${port}`);
+app.listen(config.port, () => {
+    console.log(`server started at http://localhost:${config.port}`);
 });

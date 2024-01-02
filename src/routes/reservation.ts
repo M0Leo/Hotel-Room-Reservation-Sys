@@ -11,8 +11,8 @@ router.get("/", auth, wrapAsync(Reservation.findAll))
 router.get("/new", auth, wrapAsync(Reservation.renderNewReservation))
 
 router.get('/:id', auth, wrapAsync(Reservation.findOne))
-    .put('/:id', wrapAsync(Reservation.upadteOne))
-    .delete('/:id', wrapAsync(Reservation.deleteOne))
+    .put('/:id', auth, wrapAsync(Reservation.upadteOne))
+    .delete('/:id', auth, wrapAsync(Reservation.deleteOne))
 
 router.post("/service/:id", wrapAsync(Reservation.getServiceById))
 

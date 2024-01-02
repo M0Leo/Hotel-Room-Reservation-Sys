@@ -6,11 +6,11 @@ import { Room } from "../controllers/room.controller";
 
 
 router.get("/", auth, wrapAsync(Room.findAll))
-    .post("/", wrapAsync(Room.createOne))
+    .post("/", auth, wrapAsync(Room.createOne))
 
 router.get("/new", auth, wrapAsync(Room.renderNewRoom))
 
-router.put("/:id", wrapAsync(Room.updateOne))
-    .delete("/:id", wrapAsync(Room.deleteOne))
+router.put("/:id", auth, wrapAsync(Room.updateOne))
+    .delete("/:id", auth, wrapAsync(Room.deleteOne))
 
 export default router;

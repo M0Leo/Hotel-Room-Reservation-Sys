@@ -1,47 +1,47 @@
 <% layout('layouts/boilerplate') %>
-    <section>
-        <div class="container">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Remaining</th>
-                        <th scope="col">Paid</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Mode</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for( const bill of bills ) { %>
-                        <tr>
-                            <td>
-                                <a href="reservation/<%= bill.Reservation.reservationId %>">
-                                    <%= bill.Reservation.Guest.name %>
-                                </a>
-                            </td>
-                            <td>
-                                <%= bill.total %>
-                            </td>
-                            <td>
-                                <%= bill.remaining %>
-                            </td>
-                            <td>
-                                <%= bill.paid %>
-                            </td>
-                            <td>
-                                <% if (bill.remaining==0) {%>
-                                    <span class="text-success">Complete</span>
-                                    <% } else {%>
-                                        <span class="text-warning">Pending</span>
-                                        <% } %>
-                            </td>
-                            <td>
-                                <%= bill.paymentMode %>
-                            </td>
-                        </tr>
+<section>
+    <div class="container">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Remaining</th>
+                    <th scope="col">Paid</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Mode</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for( const bill of bills ) { %>
+                <tr>
+                    <td>
+                        <a href="reservation/<%= bill.Reservation.reservationId %>">
+                            <%= bill.Reservation.Guest.name %>
+                        </a>
+                    </td>
+                    <td>
+                        <%= bill.total %>
+                    </td>
+                    <td>
+                        <%= bill.remaining %>
+                    </td>
+                    <td>
+                        <%= bill.paid %>
+                    </td>
+                    <td>
+                        <% if (bill.remaining==0) {%>
+                        <span class="text-success">Complete</span>
+                        <% } else {%>
+                        <span class="text-warning">Pending</span>
                         <% } %>
-                </tbody>
-            </table>
-        </div>
-    </section>
+                    </td>
+                    <td>
+                        <%= bill.paymentMode %>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>
